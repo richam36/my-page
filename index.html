@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>채민이의 모닝 카페 ☕</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Gowun Batang & Jua) -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Gowun Batang', serif;
+            background-color: #FAF6F0;
+            background-image: radial-gradient(#E8D8C8 1.2px, transparent 1.2px);
+            background-size: 20px 20px;
+        }
+
+        .title-font {
+            font-family: 'Jua', sans-serif;
+        }
+
+        /* 3D Flip Card Styles */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Bouncing Animation for Title */
+        @keyframes bounce-gentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bounce-char {
+            display: inline-block;
+            animation: bounce-gentle 1.8s infinite ease-in-out;
+        }
+
+        /* Shake animation for Quiz error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="text-stone-700 min-h-screen pb-16 flex flex-col items-center justify-start">
+
+    <!-- Header Section -->
+    <header class="w-full max-w-md md:max-w-2xl text-center pt-10 pb-6 px-4">
+        <!-- Morning Cafe Badge -->
+        <div class="inline-block bg-amber-100/80 text-amber-800 font-bold px-4 py-1.5 rounded-full text-xs sm:text-sm mb-3 border border-amber-200 shadow-sm">
+            ☀️ Morning Coffee & Warm Moments 🥐
+        </div>
+        
+        <!-- Bouncing Title -->
+        <h1 class="text-4xl md:text-5xl font-bold title-font text-amber-900 mb-2 tracking-wide drop-shadow-sm">
+            햇살 가득한 <br class="sm:hidden">
+            <span id="bouncing-name" class="inline-flex space-x-1 text-amber-700 underline decoration-amber-400 decoration-wavy">
+                채민
+            </span> 카페입니다 ☕
+        </h1>
+        <p class="text-stone-500 text-sm md:text-base">갓 구운 빵 향기와 그윽한 커피 한 잔처럼 따뜻한 저를 소개합니다!</p>
+    </header>
+
+    <!-- Main Container -->
+    <main class="w-full max-w-md md:max-w-2xl px-4 space-y-8">
+
+        <!-- SECTION 1: Favorite Things Flip Cards -->
+        <section class="space-y-4">
+            <div class="flex items-center space-x-2 border-b-2 border-amber-200/60 pb-2">
+                <span class="text-2xl">🌿</span>
+                <h2 class="text-2xl font-bold title-font text-stone-800">채민이가 좋아하는 3가지</h2>
+                <span class="text-xs text-amber-700 bg-amber-100/70 px-2.5 py-1 rounded-full border border-amber-200 ml-auto">카드를 눌러보세요!</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                <!-- Card 1: Photo -->
+                <div class="flip-card h-52 perspective-1000 cursor-pointer" onclick="toggleCard(this)">
+                    <div class="flip-card-inner rounded-3xl shadow-sm border border-stone-200">
+                        <!-- Front -->
+                        <div class="flip-card-front bg-gradient-to-br from-amber-50 to-orange-50 p-6 flex flex-col items-center justify-center border-2 border-amber-100">
+                            <div class="w-16 h-16 bg-amber-100/80 rounded-full flex items-center justify-center text-amber-700 text-3xl mb-3 shadow-inner">
+                                📸
+                            </div>
+                            <h3 class="title-font text-xl text-stone-800">사진 찍기</h3>
+                            <p class="text-xs text-amber-600 mt-2 font-semibold">TAP TO FLIP ↺</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back bg-amber-800 text-amber-50 p-5 flex flex-col items-center justify-center">
+                            <h3 class="title-font text-lg mb-2 text-amber-200">📷 찰칵! 좋아해요</h3>
+                            <p class="text-xs leading-relaxed font-medium">
+                                따스한 아침 햇살과 감성 스팟을 담을 때 힐링되어 멈출 수 없어요! 인생샷 건지기는 언제나 즐겁죠 ✨
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Food -->
+                <div class="flip-card h-52 perspective-1000 cursor-pointer" onclick="toggleCard(this)">
+                    <div class="flip-card-inner rounded-3xl shadow-sm border border-stone-200">
+                        <!-- Front -->
+                        <div class="flip-card-front bg-gradient-to-br from-stone-50 to-amber-50 p-6 flex flex-col items-center justify-center border-2 border-stone-200">
+                            <div class="w-16 h-16 bg-stone-200/80 rounded-full flex items-center justify-center text-stone-700 text-3xl mb-3 shadow-inner">
+                                🥐
+                            </div>
+                            <h3 class="title-font text-xl text-stone-800">맛있는 음식</h3>
+                            <p class="text-xs text-stone-500 mt-2 font-semibold">TAP TO FLIP ↺</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back bg-stone-700 text-stone-100 p-5 flex flex-col items-center justify-center">
+                            <h3 class="title-font text-lg mb-2 text-stone-300">😋 냠냠! 좋아해요</h3>
+                            <p class="text-xs leading-relaxed font-medium">
+                                바삭한 크루아상과 고소한 라떼의 조합! 세상의 모든 맛집을 도장 깨기 하는 게 제 소소한 행복이랍니다 ☕
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Music -->
+                <div class="flip-card h-52 perspective-1000 cursor-pointer" onclick="toggleCard(this)">
+                    <div class="flip-card-inner rounded-3xl shadow-sm border border-stone-200">
+                        <!-- Front -->
+                        <div class="flip-card-front bg-gradient-to-br from-orange-50 to-stone-50 p-6 flex flex-col items-center justify-center border-2 border-orange-100">
+                            <div class="w-16 h-16 bg-orange-100/80 rounded-full flex items-center justify-center text-orange-700 text-3xl mb-3 shadow-inner">
+                                🎵
+                            </div>
+                            <h3 class="title-font text-xl text-stone-800">노래 듣기</h3>
+                            <p class="text-xs text-orange-600 mt-2 font-semibold">TAP TO FLIP ↺</p>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back bg-orange-800 text-orange-50 p-5 flex flex-col items-center justify-center">
+                            <h3 class="title-font text-lg mb-2 text-orange-200">🎧 둠칫! 좋아해요</h3>
+                            <p class="text-xs leading-relaxed font-medium">
+                                잔잔한 아침 재즈부터 신나는 어쿠스틱까지! 플레이리스트에 나만의 숨은 명곡을 모을 때 가장 뿌듯해요 🎶
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: OX Quiz -->
+        <section class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-amber-200/70 shadow-sm space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">❓</span>
+                <h2 class="text-2xl font-bold title-font text-stone-800">채민이의 TMI OX 퀴즈</h2>
+            </div>
+            
+            <div class="bg-amber-50/70 p-4 rounded-2xl border border-amber-100 text-center">
+                <p class="text-stone-800 text-lg font-bold mb-4">"나는 현재 남자친구가 있나요?" 🤔</p>
+                
+                <div class="flex justify-center space-x-4">
+                    <button onclick="checkAnswer('O')" class="w-24 py-3 bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold text-xl rounded-2xl transition shadow-sm active:scale-95 border border-amber-300">
+                        O (있다)
+                    </button>
+                    <button onclick="checkAnswer('X')" class="w-24 py-3 bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold text-xl rounded-2xl transition shadow-sm active:scale-95 border border-stone-300">
+                        X (없다)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Result Message -->
+            <div id="quiz-result" class="hidden p-4 rounded-2xl text-center text-base font-bold"></div>
+        </section>
+
+        <!-- SECTION 3: Random Fortune -->
+        <section class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-amber-200/70 shadow-sm space-y-4">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl">🔮</span>
+                <h2 class="text-2xl font-bold title-font text-stone-800">오늘의 운세 뽑기</h2>
+            </div>
+
+            <div id="fortune-box" class="min-h-[90px] bg-amber-50/60 border border-amber-200/50 rounded-2xl p-4 flex items-center justify-center text-center">
+                <p class="text-amber-800 font-medium">버튼을 눌러 오늘 나를 기다리는 특별한 운세를 확인해보세요! ☕</p>
+            </div>
+
+            <button onclick="getRandomFortune()" class="w-full py-3.5 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-bold title-font text-lg rounded-2xl shadow-md transition active:scale-98 flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-cookie-bite"></i>
+                <span>오늘의 운세 확인하기!</span>
+            </button>
+        </section>
+
+        <!-- SECTION 4: 10-Second Speed Click Game -->
+        <section class="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">☕</span>
+                    <h2 class="text-2xl font-bold title-font text-stone-800">10초 라떼 연타 게임</h2>
+                </div>
+                <span class="text-xs bg-stone-100 text-stone-700 px-2.5 py-1 rounded-full font-bold border border-stone-200">미니게임</span>
+            </div>
+            
+            <p class="text-stone-500 text-sm">10초 동안 커피 잔을 얼마나 많이 누를 수 있을까요?</p>
+
+            <div class="bg-stone-50 border border-stone-200/60 rounded-2xl p-5 text-center space-y-3">
+                <!-- Status Display -->
+                <div class="flex justify-around items-center text-lg font-bold text-stone-700 border-b border-stone-200 pb-3">
+                    <div>⏱️ 남은 시간: <span id="timer" class="text-amber-700">10</span>초</div>
+                    <div>🎯 점수: <span id="score" class="text-amber-800">0</span>잔</div>
+                </div>
+
+                <!-- Interactive Click Area -->
+                <div class="py-2">
+                    <button id="click-btn" disabled onclick="handleClick()" class="w-32 h-32 bg-amber-100 text-6xl rounded-full border-4 border-amber-300 shadow-lg transition active:scale-90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center mx-auto select-none">
+                        ☕
+                    </button>
+                </div>
+
+                <!-- Controls -->
+                <div>
+                    <button id="start-btn" onclick="startGame()" class="w-full py-3 bg-amber-200 hover:bg-amber-300 text-amber-950 font-bold title-font text-base rounded-xl transition shadow-sm active:scale-95 border border-amber-300">
+                        🎮 게임 시작하기!
+                    </button>
+                </div>
+            </div>
+
+            <div id="game-result" class="hidden p-4 rounded-2xl text-center font-bold text-stone-800 bg-amber-100/70 border border-amber-300">
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-xs text-amber-800/60 font-medium">
+        <p>Made with ☕ & 💕 for 채민이의 따뜻한 아침 공간</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Title Bouncing Animation Script
+        window.addEventListener('DOMContentLoaded', () => {
+            const nameContainer = document.getElementById('bouncing-name');
+            const nameText = nameContainer.innerText.trim();
+            nameContainer.innerHTML = '';
+
+            nameText.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.innerText = char;
+                span.classList.add('bounce-char');
+                span.style.animationDelay = `${index * 0.2}s`;
+                nameContainer.appendChild(span);
+            });
+        });
+
+        // 2. Flip Card Function
+        function toggleCard(cardElement) {
+            cardElement.classList.toggle('flipped');
+        }
+
+        // 3. OX Quiz Handler
+        function checkAnswer(userChoice) {
+            const resultBox = document.getElementById('quiz-result');
+            resultBox.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'border-emerald-300', 'bg-amber-100', 'text-amber-900', 'border-amber-300', 'animate-shake');
+
+            if (userChoice === 'X') {
+                // Correct Answer (X)
+                resultBox.classList.add('bg-emerald-100', 'text-emerald-800', 'border', 'border-emerald-300');
+                resultBox.innerHTML = `🎉 정답입니다! 홀가분하고 매력 넘치는 솔로 라이프 중! ✨`;
+
+                // Fire Confetti Animation
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } else {
+                // Incorrect Answer (O)
+                resultBox.classList.add('bg-amber-100', 'text-amber-900', 'border', 'border-amber-300', 'animate-shake');
+                resultBox.innerHTML = `🙈 땡! 틀렸습니다~ (미래의 인연을 위해 커피 잔 충전 중 ☕)`;
+            }
+        }
+
+        // 4. Random Fortunes Array (12 items)
+        const fortunes = [
+            "🥐 [운세 100%] 오늘 갓 구운 빵처럼 바삭하고 따뜻한 일만 생길 거예요!",
+            "☕ [행운의 아이템: 라떼] 오늘 들르는 카페에서 뜻밖의 소소한 행복을 발견합니다.",
+            "☀️ [기분 최고] 오늘은 온 세상 햇살이 당신만을 비추는 날! 무엇이든 도전하세요.",
+            "🎁 [소소한 행운] 오랫동안 찾던 물건을 찾거나 반가운 소식을 듣게 됩니다.",
+            "🎧 [감성 충전] 오늘 우연히 들은 노래가 당신의 10년 인생곡이 될 지도 몰라요!",
+            "🍀 [행운 만점] 오늘 나누는 따뜻한 말 한마디가 세 배의 행운이 되어 돌아옵니다.",
+            "🍓 [달콤한 하루] 오늘은 고민하지 말고 좋아하는 디저트로 자신을 대접해보세요.",
+            "🌈 [힐링 주의보] 지친 일상 속 뜻밖의 여유와 미소가 찾아오는 완벽한 아침입니다.",
+            "✨ [인기 폭발] 오늘따라 당신의 미소가 더욱 매력적으로 보이는 날이에요!",
+            "📖 [새로운 시작] 마음에 담아두었던 일을 시작하기에 가장 완벽한 타이밍입니다.",
+            "🍰 [달콤한 재회] 잊고 있던 친구나 좋아하는 사람에게 반가운 메시지가 올 확률 99%!",
+            "🧸 [포근함 200%] 오늘 저녁에는 아주 평온하고 행복한 꿈을 꾸게 됩니다."
+        ];
+
+        function getRandomFortune() {
+            const fortuneBox = document.getElementById('fortune-box');
+            const randomIndex = Math.floor(Math.random() * fortunes.length);
+            
+            fortuneBox.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                fortuneBox.style.transform = 'scale(1)';
+                fortuneBox.innerHTML = `
+                    <p class="text-amber-900 font-bold text-base md:text-lg leading-relaxed animate-pulse">
+                        ${fortunes[randomIndex]}
+                    </p>
+                `;
+            }, 100);
+        }
+
+        // 5. 10-Second Mini Game Logic
+        let gameTimer = null;
+        let timeLeft = 10;
+        let score = 0;
+        let isGameRunning = false;
+
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const clickBtn = document.getElementById('click-btn');
+        const startBtn = document.getElementById('start-btn');
+        const gameResult = document.getElementById('game-result');
+
+        function startGame() {
+            score = 0;
+            timeLeft = 10;
+            isGameRunning = true;
+
+            scoreDisplay.innerText = score;
+            timerDisplay.innerText = timeLeft;
+            gameResult.classList.add('hidden');
+
+            startBtn.disabled = true;
+            startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            clickBtn.disabled = false;
+
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function handleClick() {
+            if (!isGameRunning) return;
+            score++;
+            scoreDisplay.innerText = score;
+        }
+
+        function endGame() {
+            clearInterval(gameTimer);
+            isGameRunning = false;
+
+            clickBtn.disabled = true;
+            startBtn.disabled = false;
+            startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            let comment = '';
+            if (score >= 60) {
+                comment = "⚡ 초고속 바리스타! 모닝 커피 60잔 한 큐에 완성!";
+            } else if (score >= 40) {
+                comment = "☕ 훌륭한 손놀림! 따뜻한 카페 분위기에 딱이에요!";
+            } else if (score >= 20) {
+                comment = "🥐 여유로운 아침 카페의 정석! 참 잘했어요!";
+            } else {
+                comment = "🧸 아직 잠이 덜 깼나요? 커피 한 잔 더 시켜볼까요?";
+            }
+
+            gameResult.innerHTML = `
+                🏁 <strong>게임 종료!</strong> <br>
+                10초 동안 총 <span class="text-amber-700 text-xl font-extrabold">${score}</span>잔의 커피를 내렸습니다! <br>
+                <span class="text-sm font-semibold text-stone-600 mt-1 inline-block">${comment}</span>
+            `;
+            gameResult.classList.remove('hidden');
+
+            if (score >= 40) {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.8 }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
